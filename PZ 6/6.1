@@ -1,3 +1,30 @@
 ''' Дан целочисленный список A размера 10. Вывести порядковый номер последнего
- из тех его элементов Ak, которые удовлетворяют двойному неравенству A1 < Ak < A10.
- Если таких элементов нет, то вывести 0.'''
+из тех его элементов Ak, которые удовлетворяют двойному неравенству A1 < Ak < A10.
+Если таких элементов нет, то вывести 0.'''
+
+import random
+def find_last_element_index(N):
+    A = [random.randint(0, 99) for _ in range(N)]
+    A1 = A[0]
+    A10 = A[N - 1]
+    last_index = 0
+
+    if A1 >= A10:
+        return A, 0
+
+    k = 1
+    while k < N - 1:
+        Ak = A[k]
+
+        if A1 < Ak and Ak < A10:
+            last_index = k + 1
+
+        k += 1
+
+    return A, last_index
+
+
+N1 = 10
+A1, result_index1 = find_last_element_index(N1)
+print(
+    f"Список A={A1}. A1={A1[0]}, A10={A1[N1 - 1]}. Порядковый номер последнего элемента Ak (A1 < Ak < A10): {result_index1}")
