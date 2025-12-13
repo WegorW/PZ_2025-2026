@@ -23,7 +23,8 @@ def a():
     has_duplicates = count_unique < 4
     return number, has_duplicates
 
-generated_number, has_dupes = generate()
+generated_number, has_dupes = a()
 
+# Вывод одной строкой
 result_message = "В числе есть одинаковые цифры." if has_dupes else "Все цифры в числе разные (нет одинаковых)."
 print(f"Сгенерированное 4-значное число: {generated_number}. Результат: {result_message}")
