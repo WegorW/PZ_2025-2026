@@ -1,1 +1,29 @@
+'''Дан список размера N, все элементы которого, кроме первого,
+ упорядочены по возрастанию. Сделать список упорядоченным, переместив
+ первый элемент на новую позицию.'''
+ 
+import random
+def reorder_list(N_list):
+    A_sorted_part = sorted([random.randint(1, 100) for _ in range(N_list - 1)])
+    A_first_element = random.randint(1, 100)
+    A = [A_first_element] + A_sorted_part
+
+    original_A = list(A)
+
+    first_element = A[0]
+    A = A[1:]
+
+    new_index = 0
+    while new_index < N_list - 1 and A[new_index] < first_element:
+        new_index += 1
+
+    A = A[:new_index] + [first_element] + A[new_index:]
+
+    return original_A, A
+
+
+N3 = 8
+original_A3, final_A3 = reorder_list(N3)
+
+print(f" Исходный список (первый не по порядку): {original_A3}. Упорядоченный список: {final_A3}")
 
