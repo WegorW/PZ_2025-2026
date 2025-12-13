@@ -1,1 +1,29 @@
+''' Составить программу, в которой функция генерирует четырехзначное число
+ и определяет, есть ли в числе одинаковые цифры.'''
 
+import random
+def a():
+    number = 0
+    while number < 1000 or number > 9999:
+        number = random.randint(1000, 9999)
+    num_str = str(number)
+    unique_digits = ""
+    i = 0
+    while i < 4:
+        digit = num_str[i]
+        if digit not in unique_digits:
+            unique_digits += digit
+        i += 1
+    has_duplicates = (unique_digits == num_str) or (unique_digits != num_str and (len(unique_digits) < 4))
+
+    count_unique = 0
+    while count_unique < 4 and count_unique < len(
+            unique_digits):
+        count_unique += 1
+    has_duplicates = count_unique < 4
+    return number, has_duplicates
+
+generated_number, has_dupes = generate()
+
+result_message = "В числе есть одинаковые цифры." if has_dupes else "Все цифры в числе разные (нет одинаковых)."
+print(f"Сгенерированное 4-значное число: {generated_number}. Результат: {result_message}")
