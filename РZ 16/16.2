@@ -1,0 +1,72 @@
+'''Создание базового класса "Транспортное средство" и его наследование для создания классов "Автомобиль" и "Мотоцикл". 
+В классе "Транспортное средство" будут общие свойства, такие как максимальная скорость и количество колес, а классы-наследники будут иметь свои уникальные свойства и методы.'''
+
+
+class Transport:
+    def __init__(self, max_speed, wheels):
+        self.max_speed = max_speed
+        self.wheels = wheels
+    
+    def get_info(self):
+        return f"Максимальная скорость: {self.max_speed} км/ч, Колес: {self.wheels}"
+    
+    def move(self):
+        return f"Транспорт движется со скоростью до {self.max_speed} км/ч"
+
+class Car(Transport):
+    def __init__(self, max_speed, wheels, brand, doors):
+        super().__init__(max_speed, wheels)
+        self.brand = brand
+        self.doors = doors
+    
+    def get_info(self):
+        return f"Автомобиль {self.brand}, {super().get_info()}, Дверей: {self.doors}"
+    
+    def honk(self):
+        return "Би-бип!"
+    
+    def open_trunk(self):
+        return "Багажник открыт"
+
+class Motorcycle(Transport):
+    def __init__(self, max_speed, wheels, brand, has_sidecar):
+        super().__init__(max_speed, wheels)
+        self.brand = brand
+        self.has_sidecar = has_sidecar
+    
+    def get_info(self):
+        sidecar = "с коляской" if self.has_sidecar else "без коляски"
+        return f"Мотоцикл {self.brand}, {super().get_info()}, {sidecar}"
+    
+    def wheelie(self):
+        return "Мотоцикл делает wheelie!"
+    
+    def honk(self):
+        return "Бип-бип!"
+
+print("=" * 60)
+print("Тестирование класса Автомобиль")
+print("=" * 60)
+car1 = Car(180, 4, "Toyota", 4)
+print(car1.get_info())
+print(car1.move())
+print(car1.honk())
+print(car1.open_trunk())
+
+print("\n" + "=" * 60)
+print("Тестирование класса Мотоцикл")
+print("=" * 60)
+moto1 = Motorcycle(220, 2, "Yamaha", False)
+print(moto1.get_info())
+print(moto1.move())
+print(moto1.honk())
+print(moto1.wheelie())
+
+print("\n" + "=" * 60)
+print("Дополнительные тесты")
+print("=" * 60)
+car2 = Car(250, 4, "BMW", 2)
+print(car2.get_info())
+
+moto2 = Motorcycle(150, 2, "Honda", True)
+print(moto2.get_info())
