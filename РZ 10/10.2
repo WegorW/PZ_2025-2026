@@ -1,1 +1,39 @@
+'''Из предложенного текстового файла (text18-18.txt) вывести на экран его содержимое, количество знаков пунктуации в первых четырёх строках.
+Сформировать новый файл, в который поместить текст в стихотворной форме выведя строки в обратном порядке.'''
 
+
+
+with open('text18-18.txt', 'w', encoding='UTF-8') as f:
+    f.write('Я помню чудное мгновенье:\n')
+    f.write('Передо мной явилась ты,\n')
+    f.write('Как мимолетное виденье,\n')
+    f.write('Как гений чистой красоты.\n')
+    f.write('\n')
+    f.write('В томленьях грусти безнадежной,\n')
+    f.write('В тревогах шумной суеты,\n')
+    f.write('Звучал мне долго голос нежный\n')
+    f.write('И снились милые черты.\n')
+
+'''вначале тот что выше этого сообщения потом ниже'''
+
+with open('text18-18.txt', 'r', encoding='UTF-8') as f:
+    lines = f.readlines()
+
+print('Содержимое файла:')
+for line in lines:
+    print(line, end='')
+
+punctuation = '.,!?;:-'
+count = 0
+for i in range(min(4, len(lines))):
+    for char in lines[i]:
+        if char in punctuation:
+            count += 1
+
+print(f'\n\nКоличество знаков пунктуации в первых четырёх строках: {count}')
+
+with open('text18-18_result.txt', 'w', encoding='UTF-8') as f:
+    for line in reversed(lines):
+        f.write(line)
+
+print('\nФайл text18-18_result.txt создан (строки в обратном порядке)')
