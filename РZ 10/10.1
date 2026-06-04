@@ -1,2 +1,55 @@
+'''Средствами языка Python сформировать текстовый файл (.txt), содержащий последовательность из целых положительных и отрицательных чисел. Сформировать новый текстовый файл (.txt) следующего вида, предварительно выполнив требуемую обработку элементов:
+Исходные данные:
+Количество элементов:
+Среднее арифметическое элементов:
+Последовательность, в которой каждый последующий элемент равен квадрату суммы двух соседних элементов: '''
 
 
+def create_source_file(filename, numbers):
+    with open(filename, 'w', encoding='UTF-8') as f:
+        for num in numbers:
+            f.write(str(num) + ' ')
+
+def read_numbers_from_file(filename):
+    with open(filename, 'r', encoding='UTF-8') as f:
+        data = f.read()
+        numbers_list = [int(x) for x in data.split()]
+    return numbers_list
+
+def create_new_sequence(numbers):
+    new_sequence = []
+    for i in range(len(numbers) - 1):
+        new_element = (numbers[i] + numbers[i + 1]) ** 2
+        new_sequence.append(new_element)
+    return new_sequence
+
+def write_results_to_file(filename, numbers, count, average, new_sequence):
+    with open(filename, 'w', encoding='UTF-8') as f:
+        f.write('Исходные данные: ' + str(numbers) + '\n')
+        f.write('Количество элементов: ' + str(count) + '\n')
+        f.write('Среднее арифметическое элементов: ' + str(average) + '\n')
+        f.write('Последовательность, в которой каждый последующий элемент ' +
+                'равен квадрату суммы двух соседних элементов:\n')
+        f.write(str(new_sequence))
+
+numbers = [-99, 6, 12, -36, 20, 45, 100, -15, 8, -3, 25]
+
+source_file = 'data_source.txt'
+result_file = 'data_result.txt'
+
+create_source_file(source_file, numbers)
+
+numbers_list = read_numbers_from_file(source_file)
+
+count = len(numbers_list)
+average = sum(numbers_list) / count
+
+new_sequence = create_new_sequence(numbers_list)
+
+write_results_to_file(result_file, numbers_list, count, average, new_sequence)
+
+print('Исходные данные:', numbers_list)
+print('Количество элементов:', count)
+print('Среднее арифметическое:', average)
+print('Новая последовательность:', new_sequence)
+print('Файлы созданы успешно!')
