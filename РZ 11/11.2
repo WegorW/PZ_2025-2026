@@ -1,1 +1,17 @@
+'''Составить генератор (yield), который преобразует все буквенные символы в строчные.'''
 
+
+def lower_letters(text):
+    for char in text:
+        if char.isalpha():
+            yield char.lower()
+        else:
+            yield char
+
+text = "ПрИвЕт Мир! 123"
+
+print('Исходная строка:')
+print(text)
+
+print('\nПреобразованная строка:')
+print(''.join(lower_letters(text)))
