@@ -1,1 +1,147 @@
+'''Приложение СТРАХОВАЯ КОМПАНИЯ для некоторой организации. БД должна содержать таблицу Договор со следующей структурой записи: дата заключения, страховая сумма, вид страхования, тарифная ставка и филиал, в котором заключался договор.'''
 
+
+
+import sqlite3
+
+class InsuranceCompany:
+    def __init__(self, db_name='insurance.db'):
+        self.conn = sqlite3.connect(db_name)
+        self.cursor = self.conn.cursor()
+        self.create_table()
+    
+    def create_table(self):
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS Договор (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                дата_заключения TEXT,
+                страховая_сумма REAL,
+                вид_страхования TEXT,
+                тарифная_ставка REAL,
+                филиал TEXT
+            )
+        ''')
+        self.conn.commit()
+    
+    def add_sample_data(self):
+        count = self.cursor.execute('SELECT COUNT(*) FROM Договор').fetchone()[0]
+        if count == 0:
+            data = [
+                ('2024-01-15', 100000, 'ОСАГО', 5.5, 'Центральный'),
+                ('2024-02-20', 250000, 'КАСКО', 8.0, 'Северный'),
+                ('2024-03-10', 50000, 'Медицинское', 3.2, 'Южный'),
+                ('2024-04-05', 500000, 'Имущество', 6.5, 'Центральный'),
+                ('2024-05-12', 150000, 'ОСАГО', 5.8, 'Восточный'),
+                ('2024-06-18', 300000, 'КАСКО', 7.5, 'Северный'),
+                ('2024-07-22', 75000, 'Жизнь', 4.0, 'Южный'),
+                ('2024-08-30', 400000, 'Имущество', 6.0, 'Центральный'),
+                ('2024-09-14', 120000, 'ОСАГО', 5.6, 'Восточный'),
+                ('2024-10-25', 200000, 'КАСКО', 7.8, 'Северный'),
+            ]
+            self.cursor.executemany('INSERT INTO Договор VALUES (NULL,?,?,?,?,?)', data)
+            self.conn.commit()
+            print("Данные добавлены")
+    
+    def show_all(self):
+        print("\n" + "="*90)
+        print(f"{'ID':<4} {'Дата':<12} {'Сумма':<10} {'Вид':<15} {'Ставка':<8} {'Филиал':<15}")
+        print("="*90)
+        rows = self.cursor.execute('SELECT * FROM Договор').fetchall()
+        for row in rows:
+            print(f"{row[0]:<4} {row[1]:<12} {row[2]:<10} {row[3]:<15} {row[4]:<8} {row[5]:<15}")
+        print("="*90)
+        print(f"Всего записей: {len(rows)}")
+    
+    def search(self):
+        print("Поиск: 1 - по ID, 2 - по виду страхования, 3 - по филиалу")
+        choice = input("Введите номер: ")
+        
+        if choice == '1':
+            id_ = int(input("Введите ID: "))
+            result = self.cursor.execute('SELECT * FROM Договор WHERE id = ?', (id_,)).fetchall()
+        elif choice == '2':
+            type_ = input("Введите вид страхования: ")
+            result = self.cursor.execute('SELECT * FROM Договор WHERE вид_страхования LIKE ?', (f'%{type_}%',)).fetchall()
+        elif choice == '3':
+            branch = input("Введите филиал: ")
+            result = self.cursor.execute('SELECT * FROM Договор WHERE филиал LIKE ?', (f'%{branch}%',)).fetchall()
+        else:
+            print("Неверный ввод")
+            return
+        
+        if result:
+            print(f"\nНайдено записей: {len(result)}")
+            for r in result:
+                print(r)
+        else:
+            print("Ничего не найдено")
+    
+    def delete(self):
+        print("Удаление: 1 - по ID, 2 - по дате, 3 - по виду страхования")
+        choice = input("Введите номер: ")
+        
+        if choice == '1':
+            id_ = int(input("Введите ID для удаления: "))
+            count = self.cursor.execute('DELETE FROM Договор WHERE id = ?', (id_,)).rowcount
+        elif choice == '2':
+            date = input("Введите дату (удалить старше): ")
+            count = self.cursor.execute('DELETE FROM Договор WHERE дата_заключения < ?', (date,)).rowcount
+        elif choice == '3':
+            type_ = input("Введите вид страхования: ")
+            count = self.cursor.execute('DELETE FROM Договор WHERE вид_страхования = ?', (type_,)).rowcount
+        else:
+            print("Неверный ввод")
+            return
+        
+        self.conn.commit()
+        print(f"Удалено записей: {count}")
+    
+    def edit(self):
+        id_ = int(input("Введите ID договора для редактирования: "))
+        print("Что изменить: 1 - страховая сумма, 2 - тарифная ставка, 3 - филиал")
+        choice = input("Введите номер: ")
+        
+        if choice == '1':
+            value = float(input("Введите новую сумму: "))
+            count = self.cursor.execute('UPDATE Договор SET страховая_сумма = ? WHERE id = ?', (value, id_)).rowcount
+        elif choice == '2':
+            value = float(input("Введите новую ставку: "))
+            count = self.cursor.execute('UPDATE Договор SET тарифная_ставка = ? WHERE id = ?', (value, id_)).rowcount
+        elif choice == '3':
+            value = input("Введите новый филиал: ")
+            count = self.cursor.execute('UPDATE Договор SET филиал = ? WHERE id = ?', (value, id_)).rowcount
+        else:
+            print("Неверный ввод")
+            return
+        
+        self.conn.commit()
+        print(f"Обновлено записей: {count}")
+
+app = InsuranceCompany()
+app.add_sample_data()
+
+while True:
+    print("\n--- МЕНЮ ---")
+    print("1 - Показать все договоры")
+    print("2 - Поиск договора")
+    print("3 - Удалить договор")
+    print("4 - Редактировать договор")
+    print("0 - Выход")
+    
+    choice = input("Выберите пункт: ")
+    
+    if choice == '0':
+        print("Выход из программы")
+        break
+    elif choice == '1':
+        app.show_all()
+    elif choice == '2':
+        app.search()
+    elif choice == '3':
+        app.delete()
+    elif choice == '4':
+        app.edit()
+    else:
+        print("Неверный пункт меню")
+
+app.conn.close()
