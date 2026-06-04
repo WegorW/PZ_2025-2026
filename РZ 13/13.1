@@ -1,1 +1,27 @@
+'''Из исходного текстового файла (expansion.txt) выбрать имена файлов, соответствующие типам: .xls, .xml, .html, .css, .py. 
+Посчитать количество полученных элементов.'''
 
+
+
+import re
+
+with open('expansion.txt', 'w', encoding='UTF-8') as f:
+    f.write('document.doc report.xls data.xml page.html style.css\n')
+    f.write('script.py image.png archive.zip notes.txt table.xls\n')
+    f.write('config.xml index.html main.py backup.css old.doc\n')
+    f.write('photo.jpg video.mp4 schema.xml app.py design.css\n')
+
+with open('expansion.txt', 'r', encoding='UTF-8') as f:
+    text = f.read()
+
+print('Содержимое файла expansion.txt:')
+print(text)
+
+pattern = r'\S+\.(xls|xml|html|css|py)\b'
+matches = re.findall(pattern, text)
+
+print('Найденные файлы:')
+for match in re.finditer(pattern, text):
+    print(match.group())
+
+print(f'\nКоличество элементов: {len(matches)}')
