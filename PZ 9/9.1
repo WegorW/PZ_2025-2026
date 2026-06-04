@@ -1,4 +1,38 @@
 '''Имеется список студентов группы, в котором все имена различны. Определить, есть ли в группе студент, который побывал в гостях у всех студентов. 
 (Для каждого студента составить список из множества побывавших у него в гостях друзей, причем хозяина в этот список не включать).'''
 
+students = ['Анна', 'Борис', 'Виктор', 'Галина', 'Дмитрий']
 
+visitors = {
+    'Анна': {'Борис', 'Виктор', 'Галина'},
+    'Борис': {'Анна', 'Виктор', 'Дмитрий'},
+    'Виктор': {'Анна', 'Борис', 'Галина', 'Дмитрий'},
+    'Галина': {'Борис', 'Виктор'},
+    'Дмитрий': {'Анна', 'Борис', 'Виктор', 'Галина'}
+}
+
+print("Список студентов:", students)
+print("\nГости у каждого студента:")
+for host, guests in visitors.items():
+    print(f"{host}: {guests}")
+
+visited_by = {student: set() for student in students}
+
+for host, guests in visitors.items():
+    for guest in guests:
+        visited_by[guest].add(host)
+
+print("\nКто у кого был в гостях:")
+for student, visited in visited_by.items():
+    print(f"{student}: {visited}")
+
+print("\nРезультат:")
+all_students = set(students)
+
+for student in students:
+    others = all_students - {student}
+    if visited_by[student] == others:
+        print(f"Студент '{student}' побывал у всех остальных!")
+        break
+else:
+    print("Нет студента, который побывал у всех")
